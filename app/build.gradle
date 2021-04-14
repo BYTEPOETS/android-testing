@@ -1,50 +1,97 @@
 apply plugin: 'com.android.application'
-    apply plugin: 'kotlin-android'
-    apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
-    android {
+android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-      applicationId "com.bytepoets.sample.androidtesting"
-      minSdkVersion 23
-      targetSdkVersion 30
-      versionCode 1
-      versionName "1.0"
+        applicationId "com.bytepoets.sample.androidtesting"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
 
-      testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.bytepoets.sample.androidtesting.util.CustomTestRunner"
     }
 
     buildTypes {
-       release {
-           minifyEnabled false
-           proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-       }
-    }
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
-        kotlinOptions {
-            jvmTarget = '1.8'
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
 
-  dependencies {
-    implementation fileTree (dir: "libs", include: ["*.jar"])
-      implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-      implementation 'androidx.core:core-ktx:1.1.0'
-      implementation 'androidx.appcompat:appcompat:1.1.0'
-      implementation 'com.google.android.material:material:1.0.0'
-      implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-      implementation 'androidx.navigation:navigation-fragment:2.1.0'
-      implementation 'androidx.navigation:navigation-ui:2.1.0'
-      implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-      implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
-      implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
-      testImplementation 'junit:junit:4.12'
-      androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-      androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+dependencies {
+    def retrofit_version = "2.9.0"
+    def moshi_version = "1.11.0"
+    def fragment_version = "1.3.2"
+    def hiltAndroidXVersion = '1.0.0-alpha01'
 
-  }
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-fragment:2.3.4'
+    implementation 'androidx.navigation:navigation-ui:2.3.4'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.4'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.4'
+    implementation 'com.archit.calendar:awesome-calendar:2.0.0'
+
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
+    androidTestImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
+
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
+    kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
+
+    // Hilt testing
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kaptAndroidTest "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test:core:1.3.0'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'com.google.truth:truth:0.42'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.8.1'
+    testImplementation 'org.hamcrest:hamcrest-library:1.3'
+    androidTestImplementation 'com.google.truth:truth:0.42'
+
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+    androidTestImplementation 'com.google.truth:truth:0.42'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.8.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
